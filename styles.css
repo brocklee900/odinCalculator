@@ -1,3 +1,71 @@
-h1 {
-    color: red;
+.calculator {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+
+    border: 1px black solid;
+    border-radius: 10px;
+    padding: 10px;
+    gap: 10px;
+}
+
+.display {
+    box-sizing: border-box;
+    align-content: center;
+
+    text-align: right;
+    font-size: 40px;
+    background-color: rgb(54, 133, 80);
+    border-radius: 5px;
+    padding: 10px 10px;
+    height: 75px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.numbers,
+.operands,
+.top-numbers,
+.middle-numbers,
+.bottom-numbers,
+.zero-number {
+    display: flex;
+    gap: 10px;
+}
+
+.numbers {
+    flex: 1 0 auto;
+    flex-direction: column;
+}
+
+.operands {
+    flex: .5 0 auto;
+    flex-direction: column;
+}
+
+.top-numbers,
+.middle-numbers,
+.bottom-numbers,
+.zero-number {
+    flex: 1 0 auto;
+    flex-direction: row;
+}
+
+.operands button,
+.numbers button {
+    flex-grow: 1;
+    font-size: 25px;
+}
+
+.operands button {
+    height: 50px;
+}
+
+.numbers button {
+    height: 65px;
 }
