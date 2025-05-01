@@ -43,70 +43,82 @@ let displayRefresh = false;
 let operatorLastPressed = false;
 const DIVIDEBYZERO = "bro???";
 
+function checkDoubleOperator() {
+  if (operator != "" && operatorLastPressed == false) {
+    display.textContent = operate(number1, +display.textContent, operator);
+  }
+}
+
+function calculateOnOperatorPress(newOperator) {
+  if (display.textContent != DIVIDEBYZERO) {
+      checkDoubleOperator();
+      operator = newOperator;
+      number1 = +display.textContent;
+      operatorLastPressed = true;
+      displayRefresh = true;
+    }
+}
+
+function addDecimal() {
+  if (displayRefresh == true) {
+    display.textContent = "0.";
+    displayRefresh = false;
+  } else if (display.textContent.split(".").length == 1) {
+    display.textContent += ".";
+  }
+}
+
+function calculateEqual() {
+  if (number1 != null && operator != '') {
+    number2 = +display.textContent;
+    display.textContent = operate(number1, number2, operator);
+    number1 = 0;
+    number2 = 0;
+    operator = "";
+    operatorLastPressed = false;
+    displayRefresh = true;
+  }
+}
+
+function updateDisplay(character) {
+  if (display.textContent == "0" || displayRefresh) {
+    displayRefresh = false;
+    display.textContent = character;
+  } else if (display.textContent.length < 16) {
+    display.textContent += character;
+  }
+  operatorLastPressed = false;
+}
+
 numbersDiv.addEventListener("click", (event) => {
   let id = event.target.getAttribute("id");
   if (id != null) {
-    if (display.textContent == "0" || displayRefresh) {
-      displayRefresh = false;
-      display.textContent = id;
-    } else if (display.textContent.length < 16) {
-      display.textContent += id;
-    }
-    operatorLastPressed = false;
+    updateDisplay(id);
   }
 })
 
 operandsDiv.addEventListener("click", (event) => {
   let id = event.target.getAttribute("id");
 
-  function checkDoubleOperator() {
-    if (operator != "" && operatorLastPressed == false) {
-      display.textContent = operate(number1, +display.textContent, operator);
-    }
-  }
-  
-  function calculate(newOperator) {
-		if (display.textContent != DIVIDEBYZERO) {
-      	checkDoubleOperator();
-        operator = newOperator;
-        number1 = +display.textContent;
-        operatorLastPressed = true;
-        displayRefresh = true;
-			}
-  }
-
   switch (id) {
     case "add":
-    	calculate("+");
+    	calculateOnOperatorPress("+");
       break;
     case "subtract":
-    	calculate("-");
+    	calculateOnOperatorPress("-");
       break;
     case "multiply":
-    	calculate("*");
+    	calculateOnOperatorPress("*");
       break;
     case "divide":
-    	calculate("/");
+    	calculateOnOperatorPress("/");
       break;
     case "decimal":
-      if (displayRefresh == true) {
-        display.textContent = "0.";
-        displayRefresh = false;
-      } else if (display.textContent.split(".").length == 1) {
-        display.textContent += ".";
-      }
+      addDecimal();
       break;
     case "calculate":
-			if (number1 != null && operator != '') {
-      	number2 = +display.textContent;
-        display.textContent = operate(number1, number2, operator);
-        number1 = 0;
-        number2 = 0;
-        operator = "";
-        operatorLastPressed = false;
-        displayRefresh = true;
-      }
-      break
+      calculateEqual();
+      break;
     case "clear":
       number1 = null;
       number2 = null;
@@ -119,4 +131,43 @@ operandsDiv.addEventListener("click", (event) => {
       console.log("Do nothing");
   }
   
+})
+
+addEventListener("keydown", (event) => {
+  console.log(event.key);
+  switch(event.key) {
+    case("Backspace"):
+      if (displayRefresh == false) {
+        display.textContent = display.textContent.slice(0, -1);
+        if (display.textContent.length == 0) {
+          display.textContent = "0";
+        }
+      }
+      break;
+    case("+"):
+      calculateOnOperatorPress("+")
+      break;
+    case("-"):
+      calculateOnOperatorPress("-");
+      break;
+    case("*"):
+      calculateOnOperatorPress("*");
+      break;
+    case("/"):
+      calculateOnOperatorPress("/");
+      break;
+    case("."):
+      addDecimal();
+      break;
+    case("Enter"):
+      calculateEqual();
+      break;
+    case("="):
+      calculateEqual();
+      break;
+    default:
+      if (isNaN(+event.key) == false) {
+        updateDisplay(+event.key);
+      }
+  }
 })
